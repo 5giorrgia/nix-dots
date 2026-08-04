@@ -4,7 +4,6 @@
   imports = [
     inputs.home-manager.nixosModules.default
     inputs.noctalia.nixosModules.default
-    inputs.mars-display.nixosModules.default
     ./modules/nixos/boot.nix
     ./modules/nixos/cups.nix
     ./modules/nixos/fonts.nix
