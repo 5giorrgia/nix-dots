@@ -22,6 +22,21 @@
     ./drives.nix
   ];
 
+  fileSystems."/mnt/Giochi" = {
+    device = "/dev/disk/by-label/Giochi";
+    fsType = "ntfs3";
+    options = [
+        "rw"
+        "exec"
+        "uid=1000"
+        "gid=1000"
+        "umask=000"
+        "nofail"
+        "x-gvfs-show"
+        "x-gvfs-name=Giochi"
+    ];
+  };
+
   nix.settings.experimental-features = [ "nix-command" "flakes" ];
   nixpkgs.config.allowUnfree = true;
   system.stateVersion = "26.05";
