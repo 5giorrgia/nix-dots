@@ -13,8 +13,6 @@
 
     spicetify-nix.url = "github:Gerg-L/spicetify-nix";
 
-    mars-display.url = "github:5giorgia/mars-display";
-
     nix-cachyos-kernel.url = "github:xddxdd/nix-cachyos-kernel/release";
   };
 
