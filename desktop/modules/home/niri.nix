@@ -42,7 +42,7 @@
           mode "1920x1080@74.973"
           scale 1
           transform "normal"
-          position x=1920 y=-80
+          position x=1920 y=0
       }
 
       layout {
@@ -149,6 +149,7 @@
 
           Mod+Shift+Escape { spawn-sh "pkill noctalia; sleep 1; noctalia"; }
           Mod+Shift+C { spawn-sh "noctalia msg panel-toggle yuuto/calculator:panel"; }
+	  Mod+W { spawn-sh "noctalia msg panel-open wallpaper"; }
           Mod+Shift+W { spawn-sh "noctalia msg panel-toggle noctalia/wallhaven:browser"; }
           Mod+Ctrl+W  { spawn-sh "noctalia msg panel-toggle noctalia/mpvpaper:picker"; }
           Mod+Shift+S { spawn-sh "noctalia msg screenshot-region";        }
