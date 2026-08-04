@@ -10,7 +10,6 @@
     ./modules/nixos/fonts.nix
     ./modules/nixos/home-manager.nix
     ./modules/nixos/locale-time.nix
-    ./modules/nixos/mars-display.nix
     ./modules/nixos/networking.nix
     ./modules/nixos/niri.nix
     ./modules/nixos/noctalia.nix
