@@ -11,6 +11,8 @@
     ./modules/home/noctalia.nix
     ./modules/home/packages.nix
     ./modules/home/spicetify.nix
+    ./modules/home/bash.nix
+    ./modules/home/neovim.nix
   ];
 
   home = {

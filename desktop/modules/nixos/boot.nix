@@ -7,8 +7,16 @@
 
   boot = {
     loader = {
-      systemd-boot.enable = true;
-      efi.canTouchEfiVariables = true;
+      efi = {
+        canTouchEfiVariables = true;
+        efiSysMountPoint = "/boot";
+      };
+      grub = {
+         efiSupport = true;
+         #efiInstallAsRemovable = true;
+         useOSProber = true;
+         device = "nodev";
+      };
     };
     kernelPackages = pkgs.cachyosKernels.linuxPackages-cachyos-latest-x86_64-v3;
     # OBS Camera

@@ -36,13 +36,14 @@
           scale 1
           transform "normal"
           position x=0 y=0
+          focus-at-startup
       }
 
       output "HDMI-A-1" {
           mode "1920x1080@74.973"
           scale 1
           transform "normal"
-          position x=1920 y=0
+          position x=1920 y=20
       }
 
       layout {
@@ -86,7 +87,7 @@
       }
 
       window-rule {
-          match app-id=r#"waterfox$"# title="^Picture-in-Picture$"
+          match app-id=r#"brave-origin$"# title="^Picture-in-Picture$"
           open-floating true
       }
 
@@ -178,10 +179,10 @@
           Alt+Ctrl+Up    { move-column-to-monitor-up;    }
           Alt+Ctrl+Right { move-column-to-monitor-right; }
 
-          Alt+Shift+Ctrl+Left  { move-window-to-monitor-left;  }
-          Alt+Shift+Ctrl+Down  { move-window-to-monitor-down;  }
-          Alt+Shift+Ctrl+Up    { move-window-to-monitor-up;    }
-          Alt+Shift+Ctrl+Right { move-window-to-monitor-right; }
+          Alt+Shift+Left  { move-window-to-monitor-left;  }
+          Alt+Shift+Down  { move-window-to-monitor-down;  }
+          Alt+Shift+Up    { move-window-to-monitor-up;    }
+          Alt+Shift+Right { move-window-to-monitor-right; }
 
           Alt+WheelScrollDown      cooldown-ms=150 { focus-workspace-down; }
           Alt+WheelScrollUp        cooldown-ms=150 { focus-workspace-up;   }

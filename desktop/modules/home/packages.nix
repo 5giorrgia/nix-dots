@@ -8,9 +8,9 @@
     nautilus
     fetch
     wl-clipboard
+    piper
 
     # Editor
-    neovim
     zed-editor
 
     # Social
@@ -23,6 +23,10 @@
 
     # Media
     feishin
+
+    # iPhone tethering
+    libimobiledevice
+    ifuse
 
     # VideoThumbnail
     ffmpeg
