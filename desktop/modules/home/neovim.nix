@@ -8,34 +8,27 @@
     vimAlias = true;
 
     extraPackages = with pkgs; [
-      # LSP servers
       clang-tools
       nixd
       pyright
       rust-analyzer
 
-      # rust_analyzer resolves its root through `rustc --print sysroot` and
-      # `cargo metadata`, so both have to be on neovim's PATH.
       cargo
       rustc
 
-      # Formatters
       black
       nixfmt
       rustfmt
       stylua
 
-      # Search backends for telescope
       fd
       ripgrep
     ];
 
     plugins = with pkgs.vimPlugins; [
-      # Dependencies
       plenary-nvim
       nvim-web-devicons
 
-      # UI
       alpha-nvim
       bufferline-nvim
       lualine-nvim
@@ -43,11 +36,9 @@
       nvim-treesitter.withAllGrammars
       toggleterm-nvim
 
-      # Fuzzy finder
       telescope-nvim
       telescope-file-browser-nvim
 
-      # LSP, completion and formatting
       nvim-lspconfig
       nvim-cmp
       cmp-nvim-lsp
@@ -59,15 +50,12 @@
     ];
 
     initLua = ''
-      -- The leader must be set before any <leader> mapping is created.
       vim.g.mapleader = " "
       vim.g.maplocalleader = " "
 
-      -- nvim-tree replaces netrw, which has to be disabled as early as possible.
       vim.g.loaded_netrw = 1
       vim.g.loaded_netrwPlugin = 1
 
-      -- Options
       vim.opt.number = true
       vim.opt.tabstop = 2
       vim.opt.shiftwidth = 2
@@ -76,7 +64,6 @@
       vim.opt.mouse = "a"
       vim.opt.fillchars = { eob = " " }
 
-      -- Highlights: dashboard colors and transparent background.
       local transparent_groups = {
         "Normal",
         "NormalNC",
@@ -113,8 +100,6 @@
         callback = apply_highlights,
       })
 
-      -- The bundled ftplugins override the indent options per filetype
-      -- (rust and python both force 4). This puts our own back.
       vim.api.nvim_create_autocmd("FileType", {
         group = user_group,
         desc = "Keep a 2 space indent in every filetype",
@@ -126,7 +111,6 @@
         end,
       })
 
-      -- Treesitter highlighting for every filetype that has a parser.
       vim.api.nvim_create_autocmd("FileType", {
         group = user_group,
         desc = "Start treesitter when a parser is available",
@@ -135,7 +119,6 @@
         end,
       })
 
-      -- Telescope
       local telescope = require("telescope")
       local skip_git = "--glob=!**/.git/*"
 
@@ -154,13 +137,11 @@
           },
         },
         pickers = {
-          -- telescope appends --hidden to the rg command when hidden is set.
           find_files = { hidden = true, find_command = { "rg", "--files", skip_git } },
         },
       })
       pcall(telescope.load_extension, "file_browser")
 
-      -- Pick a directory below $HOME, make it the cwd and open the tree there.
       local function select_directory()
         local actions = require("telescope.actions")
         local action_state = require("telescope.actions.state")
@@ -188,11 +169,9 @@
         desc = "Pick a directory, cd into it and open the file tree",
       })
 
-      -- Dashboard
       local alpha = require("alpha")
       local dashboard = require("alpha.themes.dashboard")
 
-      -- dashboard.button() hardcodes its highlight groups, so patch ours in.
       local function button(shortcut, text, command)
         local btn = dashboard.button(shortcut, text, command)
         btn.opts.hl = { { "AlphaButtons", 0, -1 } }
@@ -202,11 +181,11 @@
 
       dashboard.section.header.opts.hl = "AlphaHeader"
       dashboard.section.header.val = {
-        [[    _        _   _             __     ___           ]],
+        [[    _        _   _             __     ___               ]],
         [[   / \   ___| |_| |__   ___ _ _\ \   / (_)_ __ ___  ]],
         [[  / _ \ / _ \ __| '_ \ / _ \ '__\ \ / /| | '_ ` _ \ ]],
-        [[ / ___ \  __/ |_| | | |  __/ |   \ V / | | | | | | |]],
-        [[/_/   \_\___|\__|_| |_|\___|_|    \_/  |_|_| |_| |_|]],
+        [[ / ___ \  __/ |_| | | |  __/ |    \ V / | | | | | | |]],
+        [[/_/   \_\___|\__|_| |_|\___|_|     \_/  |_|_| |_| |_|]],                     
       }
 
       dashboard.section.buttons.val = {
@@ -220,7 +199,6 @@
       dashboard.opts.opts.noautocmd = true
       alpha.setup(dashboard.opts)
 
-      -- Completion
       local cmp = require("cmp")
       local luasnip = require("luasnip")
 
@@ -250,22 +228,18 @@
         }),
       })
 
-      -- LSP: the server definitions ship with nvim-lspconfig, "*" applies to all of them.
       vim.lsp.config("*", { capabilities = require("cmp_nvim_lsp").default_capabilities() })
 
-      -- nixd evaluates nixpkgs, which is what makes package names completable
-      -- inside `with pkgs; [ ... ]`. The expression pins it to this flake's lock.
       vim.lsp.config("nixd", {
         settings = {
           nixd = {
-            nixpkgs = { expr = 'import (builtins.getFlake "/home/giorgia/nix-dots").inputs.nixpkgs { }' },
+            nixpkgs = { expr = 'import (builtins.getFlake "/home/aether/nix-dots").inputs.nixpkgs { }' },
           },
         },
       })
 
       vim.lsp.enable({ "clangd", "nixd", "pyright", "rust_analyzer" })
 
-      -- Explorer
       require("nvim-tree").setup({
         on_attach = function(bufnr)
           local api = require("nvim-tree.api")
@@ -280,18 +254,14 @@
         end,
       })
 
-      -- Statusline
       require("lualine").setup()
 
-      -- Tabs
       require("bufferline").setup({
         options = { diagnostics = "nvim_lsp", show_close_icon = true, separator_style = "thin" },
       })
 
-      -- Terminal
       require("toggleterm").setup({ size = 15, direction = "horizontal" })
 
-      -- Formatter
       local conform = require("conform")
 
       conform.setup({
@@ -305,7 +275,6 @@
         },
       })
 
-      -- Search and replace in the current file, prompting on the command line.
       local function replace_in_file()
         vim.ui.input({ prompt = "Search: " }, function(search)
           if not search or search == "" then
@@ -321,7 +290,6 @@
         end)
       end
 
-      -- Close the current buffer without closing its window.
       local function close_buffer()
         local buf = vim.api.nvim_get_current_buf()
         if #vim.fn.getbufinfo({ buflisted = 1 }) > 1 then
@@ -330,24 +298,20 @@
         vim.api.nvim_buf_delete(buf, { force = false })
       end
 
-      -- Delete the word after the cursor, the counterpart of <C-w> in insert mode.
       local function delete_word_forward()
         local line = vim.api.nvim_get_current_line()
         local row, col = unpack(vim.api.nvim_win_get_cursor(0))
         local rest = line:sub(col + 1)
-        -- Same boundaries as `dw`: a run of spaces, or a word plus the spaces after it.
         local removed = rest:match("^%s+") or rest:match("^[%w_]+%s*") or rest:match("^[^%w_%s]+%s*")
 
         if removed then
           vim.api.nvim_set_current_line(line:sub(1, col) .. rest:sub(#removed + 1))
         elseif row < vim.api.nvim_buf_line_count(0) then
-          -- Nothing left on this line, so the break and the next indent are the run to delete.
           local next_line = vim.api.nvim_buf_get_lines(0, row, row + 1, true)[1]
           vim.api.nvim_buf_set_lines(0, row - 1, row + 1, true, { line .. next_line:gsub("^%s+", "") })
         end
       end
 
-      -- Keybinds
       local function map(mode, lhs, rhs, desc)
         vim.keymap.set(mode, lhs, rhs, { desc = desc })
       end
@@ -358,6 +322,9 @@
       map("n", "<leader>d", "<cmd>Telescope live_grep<CR>", "Grep")
       map("n", "<leader>r", replace_in_file, "Replace in current file")
       map("n", "<leader>c", close_buffer, "Close buffer")
+      map("n", "<leader><Tab>", "<cmd>BufferLineCycleNext<CR>", "Next buffer")
+      map("n", "<leader><Left>", "<cmd>BufferLineCyclePrev<CR>", "Previous buffer")
+      map("n", "<leader><Right>", "<cmd>BufferLineCycleNext<CR>", "Next buffer")
       map({ "n", "t" }, "<leader>j", "<cmd>ToggleTerm<CR>", "Terminal")
       map({ "n", "t" }, "<leader>w", "<cmd>wincmd w<CR>", "Cycle windows")
       map({ "n", "v" }, "<leader>F", function()
@@ -365,8 +332,6 @@
       end, "Format")
       map("t", "<Esc>", [[<C-\><C-n>]], "Exit terminal mode")
 
-      -- Ctrl+Backspace deletes the word before the cursor, Ctrl+Del the one after it.
-      -- Terminals without the kitty keyboard protocol send Ctrl+Backspace as <C-h>.
       map("i", "<C-BS>", "<C-w>", "Delete word before cursor")
       map("i", "<C-h>", "<C-w>", "Delete word before cursor")
       map("i", "<C-Del>", delete_word_forward, "Delete word after cursor")
